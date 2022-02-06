@@ -1,6 +1,7 @@
 import express from 'express';
 import 'express-async-errors';
 import { json } from 'body-parser';
+import mongoose from 'mongoose';
 import { currentUserRouter } from './router/current-user';
 import { signinRouter } from './router/signin';
 import { signoutRouter } from './router/signout';
@@ -23,8 +24,18 @@ app.all('*', async() => {
 
 app.use(errorHandler);
 
+const start = async() => {
+	try {
+		await mongoose.connect('mongodb://auth-mongo-srv:27017/auth');
+    console.log('Connected to db');
+	} catch(err){
+    console.error(err);
+  }
 
-app.listen(3005, () => {
-	console.log('lasd');
-	console.log('listening on port 3005!!!');
-});
+  app.listen(3005, () => {
+    console.log('lasd');
+    console.log('listening on port 3005!!!');
+  });
+}
+
+start();
